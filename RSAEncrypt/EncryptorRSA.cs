@@ -13,22 +13,27 @@ namespace RSAEncrypt
         /// <param name="key">Public key</param>
         /// <returns>Returns string of encrypted text</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public byte[] Encrypt(string plaintext, int[] key)
+        public string Encrypt(string plaintext, int[] key)
         {
             var bytes = Encoding.UTF8.GetBytes(plaintext);
-            var modulus = key[1];
-            var encryptedBytes = new byte[bytes.Length];
+            var modulus = key[1]; // get the RSA modulus
+            var encryptedBytes = new byte[bytes.Length * sizeof(long)];
             var publicKey = new BigInteger(key[0]);
             var n = new BigInteger(modulus);
 
             for (int i = 0; i < bytes.Length; i++)
             {
                 var m = new BigInteger(bytes[i]);
-                var c = BigInteger.ModPow(m, publicKey, n);
-                encryptedBytes[i] = (byte)c;
-            }
+                var c = (long)BigInteger.ModPow(m, publicKey, n);
+                var blockBytes = BitConverter.GetBytes(c);
 
-            return encryptedBytes;
+                // Copy the bytes of the block into the encrypted bytes array
+                for (int j = 0; j < blockBytes.Length; j++)
+                {
+                    encryptedBytes[i * sizeof(long) + j] = blockBytes[j];
+                }
+            }
+            return Convert.ToBase64String(encryptedBytes);
         }
 
 
@@ -39,20 +44,27 @@ namespace RSAEncrypt
         /// <param name="key">Private key</param>
         /// <returns>Returns string of decrypted text</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public string Decrypt(byte[] ciphertext, int[] key)
+        public string Decrypt(string ciphertext, int[] key)
 		{
-            var encryptedBytes = ciphertext;
-            var modulus = key[1];
+            var encryptedBytes = Convert.FromBase64String(ciphertext);
+            var modulus = key[1]; // get the RSA modulus
             var decryptedBytes = new byte[encryptedBytes.Length];
+            List<long> longs = new List<long>();
+
+            for(int q = 0; q < encryptedBytes.Length; q+=8)
+            {
+                longs.Add(BitConverter.ToInt64(encryptedBytes, q));
+            }
+
             var privateKey = new BigInteger(key[0]);
             var n = new BigInteger(modulus);
-         //   var totient = GetTotient(n);
 
-            for (int i = 0; i < encryptedBytes.Length; i++)
+            for (int i = 0; i < longs.Count; i++)
             {
-                var c = new BigInteger(encryptedBytes[i]);
+                var c = new BigInteger(longs[i]);
                 var m = BigInteger.ModPow(c, privateKey, n);
-                decryptedBytes[i] = (byte)m;
+                var mBytes = m.ToByteArray();
+                decryptedBytes[i] = mBytes[mBytes.Length - 1];
             }
 
             var plaintext = Encoding.UTF8.GetString(decryptedBytes);

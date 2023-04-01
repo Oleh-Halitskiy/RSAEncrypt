@@ -1,24 +1,26 @@
-﻿namespace RSAEncrypt;
+﻿using System.Net.Http.Headers;
+using System.Numerics;
+
+namespace RSAEncrypt;
 class Program
 {
     static void Main(string[] args)
     {
-        int[] test = RSAUtils.CalculatePublicKey(6, 14);
-        int[] test1 = RSAUtils.CalculatePrivateKey(6, test);
-        int[] test2 = new int[2];
-        test2[0] = 11;
-        test2[1] = 14;
-        foreach(int i in test)
-        {
-            Console.WriteLine(i);
-        }
-        EncryptorRSA encryptorRSA = new EncryptorRSA();
-        var s = encryptorRSA.Encrypt("d", test);
-        Console.WriteLine(s);
-        var b = encryptorRSA.Decrypt(s, test2);
-        Console.WriteLine(b);
-        Console.ReadKey();
+     //   Console.WriteLine("Modulus " + RSAUtils.CalculateModulus(509, 587));
+     //   Console.WriteLine("Totient " + RSAUtils.CalculateTotient(509, 587));
+        int[] test = RSAUtils.CalculatePublicKey(297688, 298783);
+        int[] test1 = RSAUtils.CalculatePrivateKey(297688, test);
 
+       // Console.WriteLine(BigInteger.ModPow(97, 3, 298783));
+
+        EncryptorRSA encryptorRSA = new EncryptorRSA();
+        var s = encryptorRSA.Encrypt("so123x/.  -/=satt", test);
+        Console.WriteLine(s);
+        var b = encryptorRSA.Decrypt(s, test1);
+        Console.WriteLine(b);
+    //    Console.WriteLine(BigInteger.ModPow(100, 3, 298783));
+    //    Console.WriteLine(BigInteger.ModPow(103651, 198459, 298783));
+        Console.ReadKey();
     }
 }
 

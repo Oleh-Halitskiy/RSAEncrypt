@@ -14,7 +14,7 @@ class Program
        // Console.WriteLine(BigInteger.ModPow(97, 3, 298783));
 
         EncryptorRSA encryptorRSA = new EncryptorRSA();
-        var s = encryptorRSA.Encrypt("so123x/.  -/=satt", test);
+        var s = encryptorRSA.Encrypt("Oleh is super happy pls, recomend this to your friends, I probably made a mistake!", test);
         Console.WriteLine(s);
         var b = encryptorRSA.Decrypt(s, test1);
         Console.WriteLine(b);

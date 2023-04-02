@@ -8,14 +8,14 @@ namespace RSAEncrypt
 {
     internal class FileManager
     {
-        private static void SaveFile(string content, string path)
+        public static void SaveFile(string content, string path)
         {
             using(StreamWriter sw = new StreamWriter(path))
             {
                 sw.Write(content);
             }
         }
-        private static string ReadFile(string path)
+        public static string ReadFile(string path)
         {
             using(StreamReader sr = new StreamReader(path))
             {

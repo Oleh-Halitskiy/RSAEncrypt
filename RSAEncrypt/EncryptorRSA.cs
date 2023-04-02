@@ -62,6 +62,7 @@ namespace RSAEncrypt
                 decryptedBytes[i] = mBytes[mBytes.Length - 1];
             }
 
+            RSAUtils.OutputPossibleCombinations((ulong)modulus);
             return Encoding.UTF8.GetString(decryptedBytes);
         }
     }

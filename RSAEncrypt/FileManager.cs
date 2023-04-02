@@ -10,11 +10,17 @@ namespace RSAEncrypt
     {
         private static void SaveFile(string content, string path)
         {
-            throw new NotImplementedException();
+            using(StreamWriter sw = new StreamWriter(path))
+            {
+                sw.Write(content);
+            }
         }
         private static string ReadFile(string path)
         {
-            throw new NotImplementedException();
+            using(StreamReader sr = new StreamReader(path))
+            {
+                return sr.ReadToEnd();
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ namespace RSAEncrypt
             int m = totient, n = publicKey[0], t;
             int q, r, u = 0, v = 1;
 
+            // Calculate the modular inverse of n modulo m using the extended Euclidean algorithm
             while (n > 0)
             {
                 q = m / n;
@@ -41,6 +42,7 @@ namespace RSAEncrypt
                 n = r;
             }
 
+            // Make sure the private key is positive and not equal to the public key
             if (u < 0)
             {
                 u += totient;
@@ -50,6 +52,7 @@ namespace RSAEncrypt
             {
                 u += totient;
             }
+            // Create an array to hold the private key components and return it
             int[] privateKeyArr = new int[2];
             privateKeyArr[0] = u;
             privateKeyArr[1] = publicKey[1];

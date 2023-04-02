@@ -55,6 +55,57 @@ namespace RSAEncrypt
             privateKeyArr[1] = publicKey[1];
             return privateKeyArr;
         }
+        public static void OutputPossibleCombinations(ulong modulus)
+        {
+            ulong[][] combinations = Combinations(PrimeFactorization(modulus));
+
+            foreach (ulong[] combination in combinations)
+            {
+                Console.WriteLine(string.Join(" * ", combination));
+            }
+        }
+        private static ulong[] PrimeFactorization(ulong n)
+        {
+            // Compute the prime factorization of n using trial division
+            ulong[] factors = new ulong[0];
+            for (ulong i = 2; i <= n; i++)
+            {
+                while (n % i == 0)
+                {
+                    Array.Resize(ref factors, factors.Length + 1);
+                    factors[factors.Length - 1] = i;
+                    n /= i;
+                }
+            }
+            return factors;
+        }
+        private static ulong[][] Combinations(ulong[] factors)
+        {
+            // Compute all possible combinations of factors
+            int numCombinations = (int)Math.Pow(2, factors.Length) - 1;
+            ulong[][] combinations = new ulong[numCombinations][];
+            for (int i = 0; i < numCombinations; i++)
+            {
+                int mask = i + 1;
+                int numFactors = 0;
+                for (int j = 0; j < factors.Length; j++)
+                {
+                    if ((mask & (1 << j)) != 0)
+                        numFactors++;
+                }
+                combinations[i] = new ulong[numFactors];
+                int index = 0;
+                for (int j = 0; j < factors.Length; j++)
+                {
+                    if ((mask & (1 << j)) != 0)
+                    {
+                        combinations[i][index] = factors[j];
+                        index++;
+                    }
+                }
+            }
+            return combinations;
+        }
     }
 }
 
